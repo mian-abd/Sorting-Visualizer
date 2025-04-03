@@ -1,0 +1,245 @@
+body {
+    margin: 0;
+    padding: 0;
+    font-family: 'Arial', sans-serif;
+    color: #333;
+    background-color: #f5f5f5;
+}
+
+.array-container {
+    position: relative;
+    width: 95%;  
+    margin: 0 auto;
+    padding: 20px;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    flex-direction: column;
+    background-color: #000000;
+    box-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    border-radius: 10px;
+}
+
+.arrays {
+    height: 400px;
+    width: 95%;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    margin-bottom: 20px;
+}
+
+.array-bar {
+    background-color: #ffffff;
+    display: inline-block;
+    margin: 0 2px;
+}
+
+.bars {
+    width: 100%;
+    align-items: center;
+    justify-content: center;
+    display: flex;
+    flex-wrap: nowrap;
+}
+
+.controls-container {
+    width: 100%;
+    padding: 10px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+}
+
+.slider-container {
+    width: 90%;
+    display: flex;
+    justify-content: space-around;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.slider-group {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin: 10px;
+    width: 45%;
+}
+
+.slider-group label {
+    color: white;
+    font-weight: bold;
+    margin-bottom: 8px;
+}
+
+.slider {
+    width: 100%;
+    appearance: none;
+    height: 10px;
+    background: #d3d3d3;
+    outline: none;
+    border-radius: 5px;
+    margin-top: 5px;
+}
+
+.slider::-webkit-slider-thumb {
+    appearance: none;
+    width: 20px;
+    height: 20px;
+    background: #007bff;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.slider::-moz-range-thumb {
+    width: 20px;
+    height: 20px;
+    background: #007bff;
+    border-radius: 50%;
+    cursor: pointer;
+}
+
+.buttons-container {
+    width: 100%;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-bottom: 15px;
+}
+
+.main-buttons {
+    width: 90%;
+    display: flex;
+    justify-content: center;
+    margin-bottom: 15px;
+}
+
+.main-buttons button {
+    padding: 12px 25px;
+    margin: 0 15px;
+    font-size: 16px;
+    font-weight: bold;
+    border-radius: 30px;
+    min-width: 180px;
+}
+
+.primary-button {
+    background: linear-gradient(to right, #4facfe 0%, #00f2fe 100%);
+    box-shadow: 0 4px 15px rgba(79, 172, 254, 0.4);
+}
+
+.primary-button:hover:not(:disabled) {
+    background: linear-gradient(to right, #00c6fb 0%, #005bea 100%);
+    transform: translateY(-2px);
+}
+
+.stop-button {
+    background: linear-gradient(to right, #ff416c 0%, #ff4b2b 100%);
+    box-shadow: 0 4px 15px rgba(255, 65, 108, 0.4);
+}
+
+.stop-button:hover:not(:disabled) {
+    background: linear-gradient(to right, #f83600 0%, #f9d423 100%);
+    transform: translateY(-2px);
+}
+
+.algorithm-buttons {
+    width: 95%;
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    background: rgba(255, 255, 255, 0.08);
+    padding: 20px;
+    border-radius: 10px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+    gap: 15px;
+}
+
+.algo-button {
+    background-color: #2c3e50;
+    margin: 5px;
+    border-radius: 8px;
+    font-weight: bold;
+    padding: 10px 12px;
+    min-width: 130px;
+    flex: 1;
+    position: relative;
+    overflow: hidden;
+    z-index: 1;
+    transition: color 0.5s;
+}
+
+.algo-button:before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0%;
+    height: 100%;
+    background-color: #3498db;
+    transition: all 0.3s;
+    z-index: -1;
+}
+
+.algo-button:hover:not(:disabled):before {
+    width: 100%;
+}
+
+.algo-button:hover:not(:disabled) {
+    color: white;
+    transform: translateY(-3px);
+    box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+}
+
+button {
+    background-color: #007bff;
+    border: none;
+    border-radius: 5px;
+    padding: 10px 15px;
+    margin: 5px;
+    color: #fff;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    font-size: 14px;
+}
+
+button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+    opacity: 0.7;
+    transform: none;
+    box-shadow: none;
+}
+
+.display {
+    background-color: #000000;
+    padding: 10px;
+    margin: 5px;
+    border-radius: 5px;
+    color: #fff;
+    text-align: center;
+    min-width: 100px;
+}
+
+.resume-button {
+    background-color: #28a745 !important;
+    position: relative;
+    overflow: hidden;
+}
+
+.resume-button:before {
+    content: '';
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 0%;
+    height: 100%;
+    background-color: #218838;
+    transition: all 0.3s;
+    z-index: -1;
+}
+
+.resume-button:hover:not(:disabled):before {
+    width: 100%;
+}

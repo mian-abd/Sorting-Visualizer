@@ -99,10 +99,10 @@ export default class SortingVisualizer extends React.Component{
         // Call the merge sort helper function to populate the animations array
         await this.mergeSortHelper(sortedArray, 0, sortedArray.length - 1, animations);
         
-        // Mark all elements as in final position (purple) when sort is complete
+        // Mark all elements as in final position (green) when sort is complete
         const finalAnimation = [];
         for (let i = 0; i < sortedArray.length; i++) {
-            finalAnimation.push({ index: i, color: 'purple' });
+            finalAnimation.push({ index: i, color: 'green' });
         }
         animations.push(finalAnimation);
         
@@ -212,7 +212,7 @@ export default class SortingVisualizer extends React.Component{
             // If this is the final merge of the entire array, elements will be in their final position
             const finalPositionAnimation = [];
             for (let i = startIdx; i <= endIdx; i++) {
-                finalPositionAnimation.push({ index: i, color: 'purple' });
+                finalPositionAnimation.push({ index: i, color: 'green' });
             }
             animations.push(finalPositionAnimation);
         }
@@ -295,10 +295,10 @@ export default class SortingVisualizer extends React.Component{
         // Call the quick sort helper function to populate the animations array
         await this.quickSortHelper(sortedArray, 0, sortedArray.length - 1, animations);
         
-        // Mark all elements as in final position (purple) when sort is complete
+        // Mark all elements as in final position (green) when sort is complete
         const finalAnimation = [];
         for (let i = 0; i < sortedArray.length; i++) {
-            finalAnimation.push({ index: i, color: 'purple' });
+            finalAnimation.push({ index: i, color: 'green' });
         }
         animations.push(finalAnimation);
         
@@ -484,10 +484,9 @@ export default class SortingVisualizer extends React.Component{
                 }
             }
             
-            // Mark the last element of this pass as in its final position (purple)
-            // This is because after each pass, the largest element is at the end
+            // Mark the last element of this pass as in its final position (green)
             const finalPositionAnimation = [
-                { index: n - i - 1, color: 'purple' }
+                { index: n - i - 1, color: 'green' }
             ];
             animations.push(finalPositionAnimation);
             
@@ -496,7 +495,7 @@ export default class SortingVisualizer extends React.Component{
                 // Mark all remaining elements as in their final position
                 const allSortedAnimation = [];
                 for (let k = 0; k < n - i - 1; k++) {
-                    allSortedAnimation.push({ index: k, color: 'purple' });
+                    allSortedAnimation.push({ index: k, color: 'green' });
                 }
                 if (allSortedAnimation.length > 0) {
                     animations.push(allSortedAnimation);
@@ -504,6 +503,13 @@ export default class SortingVisualizer extends React.Component{
                 break;
             }
         }
+        
+        // Mark all elements as in final position (green) when sort is complete
+        const finalAnimation = [];
+        for (let i = 0; i < sortedArray.length; i++) {
+            finalAnimation.push({ index: i, color: 'green' });
+        }
+        animations.push(finalAnimation);
         
         // Store animations for potential pause/resume
         await new Promise(resolve => {
@@ -566,7 +572,7 @@ export default class SortingVisualizer extends React.Component{
             // Animate the swap
             const swapAnimation = [
                 { index: 0, value: sortedArray[0], color: 'green' },
-                { index: i, value: sortedArray[i], color: 'purple' } // This element is now in its final position
+                { index: i, value: sortedArray[i], color: 'green' } // This element is now in its final position
             ];
             animations.push(swapAnimation);
             
@@ -574,9 +580,9 @@ export default class SortingVisualizer extends React.Component{
             await this.heapify(sortedArray, i, 0, animations);
         }
         
-        // Mark the first element as sorted (purple)
+        // Mark the first element as sorted (green)
         const finalElementAnimation = [
-            { index: 0, color: 'purple' }
+            { index: 0, color: 'green' }
         ];
         animations.push(finalElementAnimation);
         
@@ -787,10 +793,10 @@ export default class SortingVisualizer extends React.Component{
             animations.push(sortedRegionAnimation);
         }
         
-        // Mark all elements as in final position (purple) when sort is complete
+        // Mark all elements as in final position (green) when sort is complete
         const finalAnimation = [];
         for (let i = 0; i < sortedArray.length; i++) {
-            finalAnimation.push({ index: i, color: 'purple' });
+            finalAnimation.push({ index: i, color: 'green' });
         }
         animations.push(finalAnimation);
         
@@ -886,14 +892,14 @@ export default class SortingVisualizer extends React.Component{
                 
                 // Animate the swap
                 const swapAnimation = [
-                    { index: i, value: sortedArray[i], color: 'purple' },
+                    { index: i, value: sortedArray[i], color: 'green' },
                     { index: minIdx, value: sortedArray[minIdx], color: 'white' }
                 ];
                 animations.push(swapAnimation);
             } else {
                 // If the minimum is already at the right place
                 const alreadyInPlaceAnimation = [
-                    { index: i, color: 'purple' }
+                    { index: i, color: 'green' }
                 ];
                 animations.push(alreadyInPlaceAnimation);
             }
@@ -901,14 +907,14 @@ export default class SortingVisualizer extends React.Component{
             // Show progress by marking sorted region
             const progressAnimation = [];
             for (let k = 0; k <= i; k++) {
-                progressAnimation.push({ index: k, color: 'purple' });
+                progressAnimation.push({ index: k, color: 'green' });
             }
             animations.push(progressAnimation);
         }
         
-        // Mark the last element as in final position (purple)
+        // Mark the last element as in final position (green)
         const lastElementAnimation = [
-            { index: n - 1, color: 'purple' }
+            { index: n - 1, color: 'green' }
         ];
         animations.push(lastElementAnimation);
         

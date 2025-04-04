@@ -1,15 +1,23 @@
 # Sorting Algorithms Implementation
 
-This document outlines the approach and implementation details for the sorting visualization project.
+This project helps visualize various sorting algorithms to better understand how they work.
 
-## Algorithms Implemented
+## How to Run
 
-- Bubble Sort
-- Selection Sort
-- Insertion Sort
-- Merge Sort
-- Quick Sort
-- Heap Sort
+1. Clone this repository
+2. Navigate to the sorting directory:
+   ```
+   cd sorting
+   ```
+3. Install dependencies:
+   ```
+   npm install
+   ```
+4. Start the development server:
+   ```
+   npm start
+   ```
+5. Open your browser and go to [http://localhost:3000](http://localhost:3000)
 
 ## Implementation Approach
 
@@ -20,22 +28,4 @@ Each sorting algorithm is implemented as a separate component with visualization
 3. Speed control for animations
 4. Comparison of time and space complexity
 
-## Visualization Approach
-
-The visualization uses a simple color-coding system:
-
-- White: Default unsorted bars
-- Red: Elements being compared
-- Blue: Elements being swapped
-- Orange: Special elements (pivot in quicksort, minimum in selection sort)
-- Green: Elements in their correct position/sorted
-
-This simplified color scheme makes it easier for users to follow the sorting process.
-
-## Data Structure
-
-The visualization uses an array of numbers, represented as bars with heights proportional to their values.
-
-## Technical Details
-
-(Detailed technical implementation will be added as the project develops)
+For detailed information about the approach and implementation of the sorting algorithms, please refer to the [Sorting Implementation Documentation](./sorting/README.md). 

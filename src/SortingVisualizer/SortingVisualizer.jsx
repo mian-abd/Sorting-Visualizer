@@ -1,6 +1,125 @@
 import React from "react";
 import './SortingVisualizer.css';
 
+// GitHub Icon SVG component
+const GitHubIcon = () => (
+    <svg className="github-icon" height="20" width="20" viewBox="0 0 16 16" version="1.1" aria-hidden="true">
+        <path fillRule="evenodd" d="M8 0C3.58 0 0 3.58 0 8c0 3.54 2.29 6.53 5.47 7.59.4.07.55-.17.55-.38 0-.19-.01-.82-.01-1.49-2.01.37-2.53-.49-2.69-.94-.09-.23-.48-.94-.82-1.13-.28-.15-.68-.52-.01-.53.63-.01 1.08.58 1.23.82.72 1.21 1.87.87 2.33.66.07-.52.28-.87.51-1.07-1.78-.2-3.64-.89-3.64-3.95 0-.87.31-1.59.82-2.15-.08-.2-.36-1.02.08-2.12 0 0 .67-.21 2.2.82.64-.18 1.32-.27 2-.27.68 0 1.36.09 2 .27 1.53-1.04 2.2-.82 2.2-.82.44 1.1.16 1.92.08 2.12.51.56.82 1.27.82 2.15 0 3.07-1.87 3.75-3.65 3.95.29.25.54.73.54 1.48 0 1.07-.01 1.93-.01 2.2 0 .21.15.46.55.38A8.013 8.013 0 0016 8c0-4.42-3.58-8-8-8z"></path>
+    </svg>
+);
+
+// Algorithm information - complexities and descriptions
+const algorithmInfo = {
+    merge: {
+        name: 'Merge Sort',
+        description: 'A divide and conquer algorithm that divides the input array into two halves, recursively sorts them, then merges the sorted halves.',
+        timeComplexity: {
+            best: 'O(n log n)',
+            average: 'O(n log n)',
+            worst: 'O(n log n)',
+            percentages: { best: 60, average: 60, worst: 60 }
+        },
+        spaceComplexity: 'O(n)',
+        spacePercentage: 100,
+        stable: true,
+        steps: [
+            'Divide the array into two halves',
+            'Recursively sort both halves',
+            'Merge the sorted halves'
+        ]
+    },
+    quick: {
+        name: 'Quick Sort',
+        description: 'A divide and conquer algorithm that picks an element as pivot and partitions the array around the pivot.',
+        timeComplexity: {
+            best: 'O(n log n)',
+            average: 'O(n log n)',
+            worst: 'O(n²)',
+            percentages: { best: 60, average: 60, worst: 100 }
+        },
+        spaceComplexity: 'O(log n)',
+        spacePercentage: 60,
+        stable: false,
+        steps: [
+            'Select a pivot element',
+            'Partition array around pivot',
+            'Recursively sort sub-arrays'
+        ]
+    },
+    heap: {
+        name: 'Heap Sort',
+        description: 'A comparison-based sorting algorithm that uses a binary heap data structure.',
+        timeComplexity: {
+            best: 'O(n log n)',
+            average: 'O(n log n)',
+            worst: 'O(n log n)',
+            percentages: { best: 60, average: 60, worst: 60 }
+        },
+        spaceComplexity: 'O(1)',
+        spacePercentage: 20,
+        stable: false,
+        steps: [
+            'Build a max heap from the array',
+            'Extract maximum element and place at end',
+            'Reduce heap size and heapify root'
+        ]
+    },
+    bubble: {
+        name: 'Bubble Sort',
+        description: 'A simple comparison algorithm that repeatedly steps through the list, compares adjacent elements and swaps them if needed.',
+        timeComplexity: {
+            best: 'O(n)',
+            average: 'O(n²)',
+            worst: 'O(n²)',
+            percentages: { best: 40, average: 100, worst: 100 }
+        },
+        spaceComplexity: 'O(1)',
+        spacePercentage: 20,
+        stable: true,
+        steps: [
+            'Compare adjacent elements',
+            'Swap if they are in wrong order',
+            'Repeat until no swaps needed'
+        ]
+    },
+    insertion: {
+        name: 'Insertion Sort',
+        description: 'Builds the sorted array one item at a time by comparisons. Efficient for small data sets.',
+        timeComplexity: {
+            best: 'O(n)',
+            average: 'O(n²)',
+            worst: 'O(n²)',
+            percentages: { best: 40, average: 100, worst: 100 }
+        },
+        spaceComplexity: 'O(1)',
+        spacePercentage: 20,
+        stable: true,
+        steps: [
+            'Start with second element',
+            'Compare with elements before it',
+            'Shift elements and insert in correct position'
+        ]
+    },
+    selection: {
+        name: 'Selection Sort',
+        description: 'Divides the array into a sorted and unsorted part, repeatedly finding the minimum element from the unsorted part.',
+        timeComplexity: {
+            best: 'O(n²)',
+            average: 'O(n²)',
+            worst: 'O(n²)',
+            percentages: { best: 100, average: 100, worst: 100 }
+        },
+        spaceComplexity: 'O(1)',
+        spacePercentage: 20,
+        stable: false,
+        steps: [
+            'Find the minimum element in unsorted array',
+            'Swap with the first element of unsorted part',
+            'Move boundary of unsorted array by one'
+        ]
+    }
+};
+
 export default class SortingVisualizer extends React.Component{
     constructor(props){
         super(props);
@@ -14,9 +133,14 @@ export default class SortingVisualizer extends React.Component{
             animations: [],
             currentAnimationStep: 0,
             sortedArray: [],
-            currentAlgorithm: '' // Track which algorithm is currently running
+            currentAlgorithm: '', // Track which algorithm is currently running
+            comparisons: 0,
+            swaps: 0,
+            elapsedTime: 0,
+            sortingStartTime: null
         }
         this.animationController = null;
+        this.timerInterval = null;
     }
     
     componentDidMount(){
@@ -27,12 +151,20 @@ export default class SortingVisualizer extends React.Component{
         if (this.animationController) {
             clearTimeout(this.animationController);
         }
+        if (this.timerInterval) {
+            clearInterval(this.timerInterval);
+        }
     }
     
     resetArray(){
         if (this.animationController) {
             clearTimeout(this.animationController);
             this.animationController = null;
+        }
+        
+        if (this.timerInterval) {
+            clearInterval(this.timerInterval);
+            this.timerInterval = null;
         }
         
         const array = [];
@@ -49,7 +181,11 @@ export default class SortingVisualizer extends React.Component{
             animations: [], 
             currentAnimationStep: 0,
             sortedArray: [],
-            currentAlgorithm: ''
+            currentAlgorithm: '',
+            comparisons: 0,
+            swaps: 0,
+            elapsedTime: 0,
+            sortingStartTime: null
         });
     }
     
@@ -62,11 +198,41 @@ export default class SortingVisualizer extends React.Component{
         this.setState({speed: parseInt(e.target.value)});
     }
     
+    // Start timing for algorithms
+    startTiming = () => {
+        // Clear any existing timer
+        if (this.timerInterval) {
+            clearInterval(this.timerInterval);
+        }
+        
+        const startTime = Date.now();
+        this.setState({ sortingStartTime: startTime, elapsedTime: 0 });
+        
+        // Update elapsed time every 100ms
+        this.timerInterval = setInterval(() => {
+            if (this.state.isSorting && !this.state.isPaused) {
+                const currentTime = Date.now();
+                const elapsedTime = (currentTime - startTime) / 1000; // in seconds
+                this.setState({ elapsedTime });
+            }
+        }, 100);
+    }
+    
     // Create a delay based on the speed setting
     sleep = (ms) => {
         return new Promise(resolve => {
             this.animationController = setTimeout(resolve, ms);
         });
+    }
+    
+    // Update tracking stats for visualization
+    updateStats = (isComparison, isSwap) => {
+        let { comparisons, swaps } = this.state;
+        
+        if (isComparison) comparisons++;
+        if (isSwap) swaps++;
+        
+        this.setState({ comparisons, swaps });
     }
     
     // Main function to execute merge sort with animation
@@ -88,8 +254,16 @@ export default class SortingVisualizer extends React.Component{
         
         // For new sort, also use callback to ensure state is updated
         await new Promise(resolve => {
-            this.setState({isSorting: true, isPaused: false, currentAlgorithm: 'merge'}, resolve);
+            this.setState({
+                isSorting: true, 
+                isPaused: false, 
+                currentAlgorithm: 'merge',
+                comparisons: 0,
+                swaps: 0
+            }, resolve);
         });
+        
+        this.startTiming();
         
         // Create a copy of the array to avoid mutating the state directly
         const array = [...this.state.array];
@@ -927,121 +1101,295 @@ export default class SortingVisualizer extends React.Component{
         await this.playAnimations(animations, 0, sortedArray);
     }
     
-    render(){
-        const {array, arraySize, speed, isSorting, isPaused, colors, currentAlgorithm} = this.state;
+    // Helper method to get current algorithm details
+    getCurrentAlgorithmInfo = () => {
+        const { currentAlgorithm } = this.state;
+        if (!currentAlgorithm) return algorithmInfo.merge; // Default to merge sort when none selected
+        return algorithmInfo[currentAlgorithm];
+    }
+    
+    // Method to render complexity bars
+    renderComplexityBar = (percentage) => {
         return (
-            <div className="array-container">
-                <div className="arrays">
-                    <div className="bars">
-                        {array.map((value, index) => (
-                            <div 
-                                className="array-bar" 
-                                key={index} 
-                                style={{
-                                    height: `${value}px`,
-                                    width: '8px',
-                                    backgroundColor: colors[index] // Use the color from state
-                                }}>
-                            </div>
-                        ))}
-                    </div>
+            <div className="complexity-bar">
+                <div className="complexity-fill" style={{ width: `${percentage}%` }}></div>
+            </div>
+        );
+    }
+    
+    render(){
+        const {
+            array, arraySize, speed, isSorting, isPaused, colors, 
+            currentAlgorithm, comparisons, swaps, elapsedTime
+        } = this.state;
+        
+        const currentAlgoInfo = this.getCurrentAlgorithmInfo();
+        
+        return (
+            <div className="app-container">
+                {/* Decorative elements */}
+                <div className="decorative-element decoration-1"></div>
+                <div className="decorative-element decoration-2"></div>
+                <div className="decorative-element decoration-3"></div>
+                
+                {/* Top Navigation Bar */}
+                <div className="top-nav">
+                    <h1 className="app-logo">AlgoVision</h1>
+                    <a 
+                        href="https://github.com/mian-abd/Sorting-Visualizer" 
+                        target="_blank" 
+                        rel="noopener noreferrer"
+                        className="github-button"
+                    >
+                        <GitHubIcon />
+                        <span>View on GitHub</span>
+                    </a>
                 </div>
                 
-                <div className="controls-container">
-                    <div className="slider-container">
-                        <div className="slider-group">
-                            <label>Array Size: {arraySize}</label>
-                            <input 
-                                type="range" 
-                                min="10" 
-                                max="100" 
-                                value={arraySize} 
-                                onChange={this.handleArraySizeChange}
-                                disabled={isSorting || isPaused}
-                                className="slider"
-                            />
+                <div className="main-content">
+                    {/* Left side panel */}
+                    <div className="side-panel left-panel">
+                        <div className="algorithm-info">
+                            <h3>{currentAlgoInfo.name || "Algorithm Info"}</h3>
+                            <p>{currentAlgoInfo.description}</p>
+                            
+                            <div className="time-complexity">
+                                <h4>Time Complexity</h4>
+                                
+                                <div className="complexity-label">
+                                    <span>Best Case:</span>
+                                    <span>{currentAlgoInfo.timeComplexity.best}</span>
+                                </div>
+                                {this.renderComplexityBar(currentAlgoInfo.timeComplexity.percentages.best)}
+                                
+                                <div className="complexity-label">
+                                    <span>Average Case:</span>
+                                    <span>{currentAlgoInfo.timeComplexity.average}</span>
+                                </div>
+                                {this.renderComplexityBar(currentAlgoInfo.timeComplexity.percentages.average)}
+                                
+                                <div className="complexity-label">
+                                    <span>Worst Case:</span>
+                                    <span>{currentAlgoInfo.timeComplexity.worst}</span>
+                                </div>
+                                {this.renderComplexityBar(currentAlgoInfo.timeComplexity.percentages.worst)}
+                            </div>
+                            
+                            <div className="space-complexity">
+                                <h4>Space Complexity</h4>
+                                <div className="complexity-label">
+                                    <span>Auxiliary Space:</span>
+                                    <span>{currentAlgoInfo.spaceComplexity}</span>
+                                </div>
+                                {this.renderComplexityBar(currentAlgoInfo.spacePercentage)}
+                            </div>
+                            
+                            <div className="algorithm-stability">
+                                <h4>Stability</h4>
+                                <p>{currentAlgoInfo.stable ? "Stable" : "Not Stable"}</p>
+                            </div>
                         </div>
                         
-                        <div className="slider-group">
-                            <label>Speed: {speed}</label>
-                            <input 
-                                type="range" 
-                                min="1" 
-                                max="100" 
-                                value={speed} 
-                                onChange={this.handleSpeedChange}
-                                className="slider"
-                            />
+                        <div className="step-tracker">
+                            <h3>Algorithm Steps</h3>
+                            {currentAlgoInfo.steps.map((step, index) => (
+                                <div key={index} className={`step ${index === 0 ? 'active' : ''}`}>
+                                    {index + 1}. {step}
+                                </div>
+                            ))}
                         </div>
                     </div>
                     
-                    <div className="buttons-container">
-                        <div className="main-buttons">
-                            <button 
-                                onClick={() => this.resetArray()} 
-                                disabled={isSorting}
-                                className="primary-button"
-                            >
-                                Generate New Array
-                            </button>
+                    {/* Main visualization area */}
+                    <div className="array-visualization">
+                        <div className="array-container">
+                            <div className="arrays">
+                                <div className="bars">
+                                    {array.map((value, index) => (
+                                        <div 
+                                            className="array-bar" 
+                                            key={index} 
+                                            style={{
+                                                height: `${value}px`,
+                                                width: `${Math.max(3, Math.floor(window.innerWidth / (arraySize * 5)))}px`,
+                                                backgroundColor: colors[index] // Use the color from state
+                                            }}>
+                                        </div>
+                                    ))}
+                                </div>
+                            </div>
                             
-                            <button 
-                                onClick={this.stopSorting} 
-                                disabled={!isSorting}
-                                className="stop-button"
-                            >
-                                {isPaused ? "Paused" : "Stop"}
-                            </button>
+                            <div className="controls-container">
+                                <div className="slider-container">
+                                    <div className="slider-group">
+                                        <label>Array Size: {arraySize}</label>
+                                        <input 
+                                            type="range" 
+                                            min="10" 
+                                            max="100" 
+                                            value={arraySize} 
+                                            onChange={this.handleArraySizeChange}
+                                            disabled={isSorting || isPaused}
+                                            className="slider"
+                                        />
+                                    </div>
+                                    
+                                    <div className="slider-group">
+                                        <label>Speed: {speed}</label>
+                                        <input 
+                                            type="range" 
+                                            min="1" 
+                                            max="100" 
+                                            value={speed} 
+                                            onChange={this.handleSpeedChange}
+                                            className="slider"
+                                        />
+                                    </div>
+                                </div>
+                                
+                                <div className="buttons-container">
+                                    <div className="main-buttons">
+                                        <button 
+                                            onClick={() => this.resetArray()} 
+                                            disabled={isSorting}
+                                            className="primary-button"
+                                        >
+                                            Generate New Array
+                                        </button>
+                                        
+                                        <button 
+                                            onClick={this.stopSorting} 
+                                            disabled={!isSorting}
+                                            className="stop-button"
+                                        >
+                                            {isPaused ? "Paused" : "Stop"}
+                                        </button>
+                                    </div>
+                                    
+                                    <div className="algorithm-buttons">
+                                        <button 
+                                            onClick={this.mergeSort} 
+                                            disabled={(isSorting && !isPaused) || (isPaused && currentAlgorithm !== 'merge')}
+                                            className={`algo-button ${isPaused && currentAlgorithm === 'merge' ? "resume-button" : ""}`}
+                                        >
+                                            {isPaused && currentAlgorithm === 'merge' ? "Continue Merge Sort" : "Merge Sort"}
+                                        </button>
+                                        
+                                        <button 
+                                            onClick={this.quickSort} 
+                                            disabled={(isSorting && !isPaused) || (isPaused && currentAlgorithm !== 'quick')}
+                                            className={`algo-button ${isPaused && currentAlgorithm === 'quick' ? "resume-button" : ""}`}
+                                        >
+                                            {isPaused && currentAlgorithm === 'quick' ? "Continue Quick Sort" : "Quick Sort"}
+                                        </button>
+                                        
+                                        <button 
+                                            onClick={this.bubbleSort} 
+                                            disabled={(isSorting && !isPaused) || (isPaused && currentAlgorithm !== 'bubble')}
+                                            className={`algo-button ${isPaused && currentAlgorithm === 'bubble' ? "resume-button" : ""}`}
+                                        >
+                                            {isPaused && currentAlgorithm === 'bubble' ? "Continue Bubble Sort" : "Bubble Sort"}
+                                        </button>
+                                        
+                                        <button 
+                                            onClick={this.heapSort} 
+                                            disabled={(isSorting && !isPaused) || (isPaused && currentAlgorithm !== 'heap')}
+                                            className={`algo-button ${isPaused && currentAlgorithm === 'heap' ? "resume-button" : ""}`}
+                                        >
+                                            {isPaused && currentAlgorithm === 'heap' ? "Continue Heap Sort" : "Heap Sort"}
+                                        </button>
+                                        
+                                        <button 
+                                            onClick={this.insertionSort} 
+                                            disabled={(isSorting && !isPaused) || (isPaused && currentAlgorithm !== 'insertion')}
+                                            className={`algo-button ${isPaused && currentAlgorithm === 'insertion' ? "resume-button" : ""}`}
+                                        >
+                                            {isPaused && currentAlgorithm === 'insertion' ? "Continue Insertion Sort" : "Insertion Sort"}
+                                        </button>
+                                        
+                                        <button 
+                                            onClick={this.selectionSort} 
+                                            disabled={(isSorting && !isPaused) || (isPaused && currentAlgorithm !== 'selection')}
+                                            className={`algo-button ${isPaused && currentAlgorithm === 'selection' ? "resume-button" : ""}`}
+                                        >
+                                            {isPaused && currentAlgorithm === 'selection' ? "Continue Selection Sort" : "Selection Sort"}
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    {/* Right side panel */}
+                    <div className="side-panel right-panel">
+                        <div className="stats-container">
+                            <h3>Sorting Statistics</h3>
+                            
+                            <div className="stat-item">
+                                <span>Array Size:</span>
+                                <span className="stat-value">{arraySize} elements</span>
+                            </div>
+                            
+                            <div className="stat-item">
+                                <span>Comparisons:</span>
+                                <span className="stat-value">{comparisons}</span>
+                            </div>
+                            
+                            <div className="stat-item">
+                                <span>Swaps/Moves:</span>
+                                <span className="stat-value">{swaps}</span>
+                            </div>
+                            
+                            <div className="stat-item">
+                                <span>Time Elapsed:</span>
+                                <span className="stat-value">{elapsedTime.toFixed(2)} seconds</span>
+                            </div>
+                            
+                            <div className="stat-item">
+                                <span>Current Status:</span>
+                                <span className="stat-value">
+                                    {isSorting ? (isPaused ? "Paused" : "Sorting") : "Idle"}
+                                </span>
+                            </div>
                         </div>
                         
-                        <div className="algorithm-buttons">
-                            <button 
-                                onClick={this.mergeSort} 
-                                disabled={(isSorting && !isPaused) || (isPaused && currentAlgorithm !== 'merge')}
-                                className={`algo-button ${isPaused && currentAlgorithm === 'merge' ? "resume-button" : ""}`}
-                            >
-                                {isPaused && currentAlgorithm === 'merge' ? "Continue Merge Sort" : "Merge Sort"}
-                            </button>
-                            
-                            <button 
-                                onClick={this.quickSort} 
-                                disabled={(isSorting && !isPaused) || (isPaused && currentAlgorithm !== 'quick')}
-                                className={`algo-button ${isPaused && currentAlgorithm === 'quick' ? "resume-button" : ""}`}
-                            >
-                                {isPaused && currentAlgorithm === 'quick' ? "Continue Quick Sort" : "Quick Sort"}
-                            </button>
-                            
-                            <button 
-                                onClick={this.bubbleSort} 
-                                disabled={(isSorting && !isPaused) || (isPaused && currentAlgorithm !== 'bubble')}
-                                className={`algo-button ${isPaused && currentAlgorithm === 'bubble' ? "resume-button" : ""}`}
-                            >
-                                {isPaused && currentAlgorithm === 'bubble' ? "Continue Bubble Sort" : "Bubble Sort"}
-                            </button>
-                            
-                            <button 
-                                onClick={this.heapSort} 
-                                disabled={(isSorting && !isPaused) || (isPaused && currentAlgorithm !== 'heap')}
-                                className={`algo-button ${isPaused && currentAlgorithm === 'heap' ? "resume-button" : ""}`}
-                            >
-                                {isPaused && currentAlgorithm === 'heap' ? "Continue Heap Sort" : "Heap Sort"}
-                            </button>
-                            
-                            <button 
-                                onClick={this.insertionSort} 
-                                disabled={(isSorting && !isPaused) || (isPaused && currentAlgorithm !== 'insertion')}
-                                className={`algo-button ${isPaused && currentAlgorithm === 'insertion' ? "resume-button" : ""}`}
-                            >
-                                {isPaused && currentAlgorithm === 'insertion' ? "Continue Insertion Sort" : "Insertion Sort"}
-                            </button>
-                            
-                            <button 
-                                onClick={this.selectionSort} 
-                                disabled={(isSorting && !isPaused) || (isPaused && currentAlgorithm !== 'selection')}
-                                className={`algo-button ${isPaused && currentAlgorithm === 'selection' ? "resume-button" : ""}`}
-                            >
-                                {isPaused && currentAlgorithm === 'selection' ? "Continue Selection Sort" : "Selection Sort"}
-                            </button>
+                        <div className="color-legend">
+                            <h3>Color Legend</h3>
+                            <div className="legend-item">
+                                <span className="legend-color" style={{backgroundColor: 'white'}}></span>
+                                <span>Unsorted Element</span>
+                            </div>
+                            <div className="legend-item">
+                                <span className="legend-color" style={{backgroundColor: 'red'}}></span>
+                                <span>Currently Comparing</span>
+                            </div>
+                            <div className="legend-item">
+                                <span className="legend-color" style={{backgroundColor: 'blue'}}></span>
+                                <span>Swapping Elements</span>
+                            </div>
+                            <div className="legend-item">
+                                <span className="legend-color" style={{backgroundColor: 'green'}}></span>
+                                <span>Sorted Position</span>
+                            </div>
+                            <div className="legend-item">
+                                <span className="legend-color" style={{backgroundColor: 'orange'}}></span>
+                                <span>Pivot/Special Element</span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                
+                {/* Footer */}
+                <div className="footer">
+                    <div className="footer-content">
+                        <div className="creator-info">
+                            Created by <a href="https://www.linkedin.com/in/mian-abdullah-91639a221/" target="_blank" rel="noopener noreferrer" className="creator-link">Mian Abdullah</a>
+                        </div>
+                        <div className="tagline">
+                            Visualize & understand sorting algorithms
+                        </div>
+                        <div className="copyright">
+                            © 2025 AlgoVision - A Sorting Algorithm Visualization Tool
                         </div>
                     </div>
                 </div>

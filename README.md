@@ -2,7 +2,7 @@
 
 A dynamic web application that helps visualize various sorting algorithms to better understand how they work and compare their performance.
 
-**[Live Demo: ](https://mian-abd.github.io/Sorting-Visualizer/)**
+**[Live Demo: https://mian-abd.github.io/Sorting-Visualizer/](https://mian-abd.github.io/Sorting-Visualizer/)**
 
 ## Features
 

@@ -1,10 +1,11 @@
+# This workflow file is deprecated and has been replaced by react-gh-pages.yml
 # Simple workflow for deploying static content to GitHub Pages
-name: Deploy static content to Pages
+name: DISABLED - Deploy static content to Pages
 
 on:
   # Runs on pushes targeting the default branch
   push:
-    branches: ["main"]
+    branches: ["DISABLED"]
 
   # Allows you to run this workflow manually from the Actions tab
   workflow_dispatch:
